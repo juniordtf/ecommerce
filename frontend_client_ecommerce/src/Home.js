@@ -74,24 +74,29 @@ class Home extends React.Component {
 
   renderItem = ({ item }) => {
     let idProduto = item._id;
-    return (
-      <View>
-        <Text>Nome: {item.nome} </Text>
-        <Text>Descrição: {item.descricao}</Text>
-        <Text>
-          Preço unit. (R$): {item.preco} Qte.: {item.qte} 
-        </Text>
-        <Button
-          transparent
-          onPress={() =>
-            this.props.navigation.navigate("EditarProduto", { idProduto })
-          }
-        >
-          <Text style={styles.bigBlue}>Aumentar estoque</Text>
-        </Button>
-        <View style={styles.line} />
-      </View>
-    );
+    //Para não renderizar produtos com quantidade 0
+    if (item.qte > 0) {
+      return (
+        <View style={{ marginLeft: "5%", marginRight: "5%" }}>
+          <Text />
+          <Text style={styles.textProduct}>{item.nome}</Text>
+          <Text style={{ marginBottom: 2 }}>Descrição: {item.descricao}</Text>
+          <Text style={{ marginBottom: 2 }}>
+            Preço unit. (R$): {item.preco} Qte. em estoque: {item.qte}
+          </Text>
+          <Button
+            transparent
+            small
+            onPress={() =>
+              this.props.navigation.navigate("Compra", { idProduto })
+            }
+          >
+            <Text style={styles.bigBlue}> Comprar</Text>
+          </Button>
+          <View style={styles.line} />
+        </View>
+      );
+    }
   };
 
   render() {
@@ -100,7 +105,7 @@ class Home extends React.Component {
         <Header style={styles.header} iosBarStyle="light-content">
           <Left />
           <Body>
-            <Text style={styles.title}>Home</Text>
+            <Text style={styles.title}>Loja</Text>
           </Body>
           <Right>
             <Button transparent onPress={() => this.logout()}>
@@ -110,25 +115,23 @@ class Home extends React.Component {
         </Header>
         <Content>
           <Text />
-          <View style={styles.buttonHomeSection}>
-            <TouchableHighlight
-              underlayColor="#2A4809"
-              style={styles.button}
-              onPress={() => this.props.navigation.navigate("CriarProduto")}
-            >
-              <Text style={styles.buttonText}>Criar Produto</Text>
-            </TouchableHighlight>
-          </View>
-          <Text />
-          <Text />
-          <Text style={styles.topic}> Estoque</Text>
-          <Text />
+          <Text style={styles.topic}>Produtos</Text>
           <Text />
           <View>
             <FlatList data={this.state.produtos} renderItem={this.renderItem} />
           </View>
           <Text />
           <Text />
+          <Text />
+          <View style={styles.buttonHomeSection}>
+            <TouchableHighlight
+              underlayColor="#2A4809"
+              style={styles.button}
+              onPress={() => this.props.navigation.navigate("Checkout")}
+            >
+              <Text style={styles.buttonText}>Finalizar compra</Text>
+            </TouchableHighlight>
+          </View>
         </Content>
       </Container>
     );

@@ -4,7 +4,6 @@
  */
 import { StyleSheet } from "react-native";
 
-
 const styles = StyleSheet.create({
   container: {
     marginTop: 30,
@@ -27,7 +26,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: "black",
     fontWeight: "bold",
-    textAlign: "left"
+    textAlign: "left",
+    marginLeft: "2%"
   },
   input: {
     backgroundColor: "#FFFFFF",
@@ -38,6 +38,24 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#7ED321",
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 12,
+    borderRadius: 3,
+    width: "60%"
+  },
+  buttonA: {
+    backgroundColor: "#ADD8E6",
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 12,
+    borderRadius: 3,
+    width: "60%"
+  },
+  buttonB: {
+    backgroundColor: "#C0C0C0",
     height: 40,
     justifyContent: "center",
     alignItems: "center",
@@ -57,9 +75,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   },
+  checkoutSection: {
+    width: "100%",
+    height: "50%",
+    flexDirection:'row',
+    marginLeft: "5%",
+    marginTop: "5%"
+  },
   buttonHomeSection: {
     width: "100%",
     height: "5%",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  confirmacaoSection: {
+    width: "100%",
+    height: "20%",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -102,8 +133,8 @@ const styles = StyleSheet.create({
     padding: 10
   },
   line: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
+    borderBottomColor: "black",
+    borderBottomWidth: 1
   },
   bigBlue: {
     color: "blue",
@@ -112,6 +143,11 @@ const styles = StyleSheet.create({
   },
   red: {
     color: "red"
+  },
+  textProduct: {
+    fontWeight: "bold",
+    fontSize: 15,
+    marginBottom: 3,
   }
 });
 

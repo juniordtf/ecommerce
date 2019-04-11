@@ -16,8 +16,11 @@
     "jsonwebtoken": "^8.5.1",
     "meteor-node-stubs": "^0.4.1",
     "mongodb": "^3.2.2",
+    "nodemon": "^1.18.11",
     "react": "^16.5.0",
-    "react-dom": "^16.5.0"
+    "react-dom": "^16.5.0",
+    "to": "^0.2.9",
+    "update": "^0.7.4"
   },
   "meteor": {
     "mainModule": {

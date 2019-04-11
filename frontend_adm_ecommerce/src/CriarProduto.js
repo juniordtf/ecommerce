@@ -36,13 +36,16 @@ class CriarProduto extends React.Component {
       nome: "",
       descricao: "",
       preco: "",
-      qte: ""
+      qte: "0"
     };
   }
 
 
   //importação da API
-  criar = () => {
+  criar = async () => {
+
+    const acc = await AsyncStorage.getItem("userToken");
+
     const novoProduto = {
       nome: this.state.nome,
       descricao: this.state.descricao,
@@ -54,12 +57,13 @@ class CriarProduto extends React.Component {
       .request({
         method: "post",
         url: "http://localhost:4321/produto",
+        headers: {'x-access-token': acc},
         data: novoProduto
       })
       .then(response => console.log(response))
       .catch(err => console.log(err));
 
-    Alert.alert("produto criado com sucesso!");
+    Alert.alert("Produto criado com sucesso!");
     this.props.navigation.goBack();
   };
 
@@ -106,12 +110,12 @@ class CriarProduto extends React.Component {
                 maxLength={12}
               />
             </Item>
-            <Item>
+            <Item style={styles.nullButton}>
               <Label>Quantidade:</Label>
               <Input
                 autoCapitalize="none"
                 value={this.state.qte}
-                onChangeText={qte => this.setState({ qte })}
+                disabled={true}
                 maxLength={5}
               />
             </Item>

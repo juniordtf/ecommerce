@@ -27,16 +27,18 @@ import {
   Label
 } from "native-base";
 import axios from "axios";
+import { connect } from 'react-redux';
 import styles from "./style";
 
-class EditarProduto extends React.Component {
+class Compra extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       nome: "",
       descricao: "",
       preco: "",
-      qte: ""
+      qte: "",
+      qtePedida: "0"
     };
   }
 
@@ -46,53 +48,65 @@ class EditarProduto extends React.Component {
 
   //importação da API
   getProduto = async () => {
-
     const acc = await AsyncStorage.getItem("userToken");
     const id = this.props.navigation.getParam("idProduto");
 
     axios
       .request({
         method: "get",
-        url: "http://localhost:4321/produto/"+id,
+        url: "http://localhost:4321/produto/" + id,
         headers: { "x-access-token": acc }
       })
       .then(response => {
-        this.setState({ 
+        this.setState({
           nome: response.data.nome,
           descricao: response.data.descricao,
           preco: response.data.preco,
-          qte: response.data.qte        
+          qte: response.data.qte
         });
       })
       .catch(err => console.log(err));
   };
 
-    //importação da API
-    alterarProduto = async () => {
+  //Função para comprar o produto
+  comprarProduto = async () => {
+    const acc = await AsyncStorage.getItem("userToken");
+    const id = this.props.navigation.getParam("idProduto");
 
-      const acc = await AsyncStorage.getItem("userToken");
-      const id = this.props.navigation.getParam("idProduto");
-  
+    let aux_a = parseFloat(this.state.qtePedida);
+    let aux_b = parseFloat(this.state.qte);
+    let aux_c = parseFloat(this.state.preco);
+
+    if (aux_a > aux_b) {
+      Alert.alert(
+        "A quantidade deste item em estoque é de ",
+        JSON.stringify(aux_b)
+      );
+    } else {
+      let novaQte = aux_b - aux_a;
+
       const produto = {
         nome: this.state.nome,
         descricao: this.state.descricao,
         preco: this.state.preco,
-        qte: this.state.qte
+        qte: novaQte
       };
-  
+
       axios
         .request({
           method: "put",
-          url: "http://localhost:4321/produto/"+id,
-          headers: {'x-access-token': acc},
+          url: "http://localhost:4321/produto/" + id,
+          headers: { "x-access-token": acc },
           data: produto
         })
         .then(response => console.log(response))
         .catch(err => console.log(err));
-  
-      Alert.alert("Quantidade do produto alterada com sucesso!");
-      this.props.navigation.goBack();
-    };
+
+      let subTotal = aux_a * aux_c;
+      this.props.dispatch({ type: 'SUM', novoTotal: subTotal });
+      this.props.navigation.navigate("Home");
+    }
+  };
 
   render() {
     return (
@@ -104,33 +118,36 @@ class EditarProduto extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Text style={styles.title}>Editar</Text>
+            <Text style={styles.title}>Compra</Text>
           </Body>
           <Right />
         </Header>
         <Content>
-        <Form>
-            <Item style={styles.nullButton}>
-              <Label>Nome:</Label>
+          <Form>
+            <Item>
+              <Label>Nome: </Label>
               <Input
+                style={styles.nullButton}
                 autoCapitalize="none"
                 value={this.state.nome}
                 disabled={true}
                 maxLength={25}
               />
             </Item>
-            <Item style={styles.nullButton}>
+            <Item>
               <Label>Descrição:</Label>
               <Input
+                style={styles.nullButton}
                 autoCapitalize="none"
                 value={this.state.descricao}
                 disabled={true}
                 maxLength={50}
               />
             </Item>
-            <Item style={styles.nullButton}>
+            <Item>
               <Label>Preco(R$):</Label>
               <Input
+                style={styles.nullButton}
                 autoCapitalize="none"
                 value={this.state.preco}
                 disabled={true}
@@ -141,8 +158,8 @@ class EditarProduto extends React.Component {
               <Label>Quantidade:</Label>
               <Input
                 autoCapitalize="none"
-                value={this.state.qte}
-                onChangeText={qte => this.setState({ qte })}
+                value={this.state.qtePedida}
+                onChangeText={qtePedida => this.setState({ qtePedida })}
                 maxLength={5}
               />
             </Item>
@@ -152,9 +169,9 @@ class EditarProduto extends React.Component {
             <TouchableHighlight
               underlayColor="#2A4809"
               style={styles.button}
-              onPress={() => this.alterarProduto()}
+              onPress={() => this.comprarProduto()}
             >
-              <Text style={styles.buttonText}>Alterar produto</Text>
+              <Text style={styles.buttonText}>Adicionar ao carrinho</Text>
             </TouchableHighlight>
           </View>
         </Content>
@@ -163,4 +180,10 @@ class EditarProduto extends React.Component {
   }
 }
 
-export default EditarProduto;
+function mapStateToProps(state) {
+    return {
+      novoTotal: state.novoTotal
+    };
+  }
+  
+  export default connect(mapStateToProps)(Compra);
